@@ -16,5 +16,7 @@
 
 - Plotting of graphs like scatter plot, distribution plot, count plot, heatmap, boxplot, bar plot using matplotlib and seaborn libraries.
 
+I have also provided a brief summary of the whole case study in a pdf.
+
 
 
