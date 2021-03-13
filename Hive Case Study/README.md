@@ -12,7 +12,7 @@ With online sales gaining popularity, tech companies are exploring ways to impro
 
 Below in the diagram, you will learn the various stages in collecting and processing the e-commerce website data.
 
-
+![0f171f15-9c00-417b-9925-1d8004d1255f-Capture](https://user-images.githubusercontent.com/73686720/111028878-94c93900-841f-11eb-8332-fe4aa8bbb6d5.png)
 
 One of the most popular use cases of Big Data is in eCommerce companies such as Amazon or Flipkart. So before we get into the details of the dataset, let us understand how eCommerce companies make use of these concepts to give customers product recommendations. This is done by tracking your clicks on their website and searching for patterns within them. This kind of data is called a clickstream data. Let us understand how it works in detail.
 
