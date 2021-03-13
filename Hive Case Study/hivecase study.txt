@@ -1,0 +1,117 @@
+
+INVOKE THE HIVE SESSION IN THE PUTTY TERMINAL
+
+hadoop>$ hive
+
+hive>show databases;
+
+CREATE THE DATABASE IN THE HIVE FOR THE CASE STUDY
+
+hive>create database casestudy;
+
+hive>use casestudy; 
+
+OPEN AN OTHER PUTTY TERMINAL TO COPY CHECK THE PATH AND COPY THE FILES INTO HDFS FROM S3
+
+hadoop>$ hadoop fs -ls /user/hive
+
+hadoop>$ hadoop fs -mkdir /user/hive/casestudy
+
+RECHECK THE DIRECTORY
+hadoop>$ hadoop fs -ls /user/hive
+
+BROWSE THE PUBLIC S3 bucket
+hadoop>$ aws s3 ls e-commerce-events-ml
+
+IN CASE U WANT TO CREATE A S3 BUCKET 
+hadoop>hadoop distcp 's3://hive-casestudy-input/*' '/user/hive/casestudy/'
+
+CHECK IF IT IS COPIED IN THE HIVE TABLE
+hadoop>$ hadoop fs -ls /user/hive/casestudy/*
+
+CHECK IF THE DATA IS STORED IN THE SCHEMA
+hadoop>$ hadoop fs -cat /user/hive/casestudy/2018* | head -5
+
+CREATE A BASE TABLE
+
+
+
+CREATE EXTERNAL TABLE IF NOT EXISTS clickstream_input(event_time timestamp,event_type string,product_id int,category_id int,
+category_code string,brand string,
+ price float,user_id int,user_session string)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+STORED AS TEXTFILE
+LOCATION '/user/hive/casestudy/'
+tblproperties("skip.header.line.count"="1");
+
+CHECK THE TABLE
+select * from clickstream_input limit 5;
+
+SET THE DEFAULT OPTIONS TO REQUIRED OPTIONS
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.exec.dynamic.partition.mode=true;
+set hive.enforce.bucketing=true;
+
+
+CREATE A PARTITIONED TABLE WITH PARTITION BY AND CLUSTER BY
+
+illustrated by an example
+ 
+CREATE TABLE IF NOT EXISTS clickstream_bucket( month(event_time),event_type,product_id,category_code,brand ,price,user_id)                                      ) 
+PARTITIONED BY (month) CLUSTERED BY  (category code) into ---- buckets
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+STORED AS TEXTFILE;
+
+
+You are required to provide answers to the questions given below.
+
+Find the total revenue generated due to purchases made in October.
+select sum(price*product_id) from clickstream_bucket where event_type='purchase' and month='Oct';
+
+Write a query to yield the total sum of purchases per month in a single output. 
+select count(event_type) from clickstream_bucket order by event_type;-doubtful
+
+Write a query to find the change in revenue generated due to purchases from October to November.
+
+select sum(price*product_id) from clickstream_bucket where event_type='purchase' and month='Oct'
+difference
+
+select sum(price*product_id) from clickstream_bucket where event_type='purchase' and month='Nov';
+
+
+Find distinct categories of products. Categories with null category code can be ignored.
+
+
+Find the total number of products available under each category.
+group by 
+
+Which brand had the maximum sales in October and November combined?
+select brand ,max(sales) from clickstream_bucket  group by brand order by max(sales);
+
+Which brands increased their sales from October to November?
+
+later
+
+Your company wants to reward the top 10 users of its website with a Golden Customer plan. Write a query to generate a list of top 10 users who spend the most.
+slect  user_id,max(event_code.purchase) from click_stream limit 5;
+
+Note:
+
+To write your queries, please make necessary optimizations, such as selecting the appropriate table format and using partitioned/bucketed tables. You will be awarded marks for enhancing the performance of your queries.
+Each question should have one query only.
+
+Use a 2-node EMR cluster with both the master and core nodes as M4.large.
+
+Make sure you terminate the cluster when you are done working with it.
+
+Since EMR can only be terminated and cannot be stopped, always have a copy of your queries in a text editor so that you can copy-paste them every time you launch a new cluster.
+
+Do not leave PuTTY idle for so long. Do some activity like pressing the space bar at regular intervals. If the terminal becomes inactive, you don't have to start a new cluster. You can reconnect to the master node by opening the puTTY terminal again, giving the host address and loading  .ppk key file. 
+
+For your information, if you are using emr-6.x release, certain
+
+select count(distinct(category_code)) from the base ;
+
+select month(event_time) from base limit 5;
+
+ 
